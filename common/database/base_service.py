@@ -1,0 +1,16 @@
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, create_async_engine
+from contextlib import asynccontextmanager
+
+
+class BaseDataBaseService:
+    def __init__(self, dsn: str):
+        self._dsn = dsn
+        self._engine = create_async_engine(self._dsn, echo=True)
+        self._sessionmaker = async_sessionmaker(engine=self._engine)
+
+    @asynccontextmanager
+    async def transaction(self):
+        async with self._sessionmaker() as session:
+            async with session.begin():
+                yield session
+                
