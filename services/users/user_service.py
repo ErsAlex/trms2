@@ -56,5 +56,5 @@ class UserDatabaseService(BaseDataBaseService):
             return {"user_deleted": True}
         
         
-def get_service():
+def get_user_service():
     return UserDatabaseService(dsn=UserDatabaseSettings.db_dsn)
