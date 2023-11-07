@@ -26,6 +26,7 @@ async def get_access_token(
         )
        if not current_user:
            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    access_token = JWTservice(current_user, settings.access_token_expires).create_access_token 
+    jwt =  JWTservice(current_user, settings)
+    access_token = jwt.create_access_token
     response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
     

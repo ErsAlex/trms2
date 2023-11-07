@@ -17,19 +17,21 @@ class JWTservice:
     def __init__(
         self,
         user: User,
-        settings_timedelta: timedelta
+        settings: JWTSettings
         ):
         
-        self.user = user
-        self.settings = settings_timedelta
+        self._user = user
+        self._settings = settings
+
     
-    def create_access_token(self) :
+    def create_access_token(self):
         encoded_data = {"sub": self.user.id}
-        expire_date = datetime.utcnow() + self.settings
+        expire_date = datetime.utcnow() + self._settings.access_token_expires
         encoded_data.update({"exp": expire_date})
         encoded_jwt = jwt.encode(
             encoded_data,
             self.settings.secret_key,
-            algorithm=self.settings.algorithm)
+            algorithm=self.settings._algorithm)
         return encoded_jwt
     
+
