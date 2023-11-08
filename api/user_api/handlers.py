@@ -23,7 +23,3 @@ async def create_user(
         return UserSchema.moddel_validate(new_user)
     except IntegrityError as err:
         raise HTTPException(status_code=503, detail=f"Database error: {err}")
-
-@router.patch("/tasks")   
-async def read_tasks():
-    return  {"message":"tasks"}
