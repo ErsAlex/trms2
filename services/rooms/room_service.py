@@ -104,6 +104,20 @@ class RoomDatabaseService(BaseDataBaseService):
         await session.execute(stmt)
         return {"access_updated_status": True}
     
+    async def get_user_role_in_room(
+        self,
+        session: AsyncSession,
+        room_id: int,
+        user_id: uuid.UUID
+    ):
+        stmt = select(UserRoomAccess.user_permissions).where(and_(
+            UserRoomAccess.room_id==room_id,
+            UserRoomAccess.user_id==user_id
+            ))
+        role = await session.execute(stmt)
+        return role
+        
+    
     
 def get_room_service():
     return RoomDatabaseService(settings=RoomDatabaseSettings)
