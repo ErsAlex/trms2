@@ -4,7 +4,7 @@ from common.database.base_service import BaseDataBaseService
 from common.utils.hashing import get_password_hash
 from models.models import User
 from .settings import UserDatabaseSettings
-
+import uuid
 class UserDatabaseService(BaseDataBaseService):
 
         async def create_user(
@@ -28,10 +28,10 @@ class UserDatabaseService(BaseDataBaseService):
         async def update_user(
             self,
             session: AsyncSession,
-            filter_by,
+            user_id: uuid.UUID,
             data: dict,
         ):
-            stmt = update(User).values(**data).filter_by(**filter_by).returning(User)
+            stmt = update(User).where(User.id==user_id).values(**data).returning(User)
             updated_user = await session.execute(stmt)
             updated_user = updated_user.scalar_one_or_none()
             return updated_user
