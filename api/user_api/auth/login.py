@@ -19,9 +19,9 @@ async def get_access_token(
         database: auth_service,
         form_data: OAuth2PasswordRequestForm = Depends()):
     
-    async with database.transaction() as session:
+    async with database.session.begin():
        current_user =  database.authenticate_user(
-            session,
+            database.session,
             form_data,
         )
        if not current_user:

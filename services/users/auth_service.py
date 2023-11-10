@@ -32,4 +32,5 @@ class AuthService(BaseDataBaseService):
             )
     
 def get_auth_service():
-    return AuthService(dsn=UserDatabaseSettings.db_dsn)
+    settings = UserDatabaseSettings()
+    return AuthService(dsn=settings.db_dsn)
