@@ -6,11 +6,10 @@ class BaseDataBaseService:
     def __init__(self, dsn: str):
         self._dsn = dsn
         self._engine = create_async_engine(self._dsn, echo=True)
-        self._sessionmaker = async_sessionmaker(engine=self._engine)
+        self._sessionmaker = async_sessionmaker(self._engine, expire_on_commit=False)
+        
+    
+        self.session = self._sessionmaker()
 
-    @asynccontextmanager
-    async def transaction(self):
-        async with self._sessionmaker() as session:
-            async with session.begin():
-                yield session
-                
+
+    

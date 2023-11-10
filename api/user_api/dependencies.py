@@ -14,9 +14,9 @@ auth_service = Annotated[AuthService,  Depends(get_auth_service)]
 async def get_current_user(
     database: UserDatabaseService = Depends(get_user_service),
     user_id: uuid.UUID = Depends(get_user_id_from_token)) -> User:
-    async with database.transaction() as session:
+    async with database.session.begin():
         user = await database.get_user(
-            session,
+            database.session,
             id=user_id
         )
         return user

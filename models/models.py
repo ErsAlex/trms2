@@ -21,6 +21,7 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
     created_rooms: Mapped[List["Room"]] = relationship(back_populates="owner")
+    room_accesses: Mapped[List['UserRoomAccess']] = relationship(back_populates="user")
 
 class Room(Base):
     __tablename__ = "rooms"

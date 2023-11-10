@@ -12,12 +12,12 @@ async def create_room(
     room_data: RoomCreateSchema
     ):
     try:
-        async with database.transaction() as session:
+        async with database.session.begin():
             room = await database.create_room(
-                session,
-                room_data.name,
-                room_data.description,
-                owner_id
+                session=database.session,
+                name=room_data.name,
+                description=room_data.description,
+                owner_id=owner_id
                 )
             return RoomResponseSchema.model_validate(room)
     except IntegrityError as err:
@@ -32,12 +32,11 @@ async def update_room(
 ):
     try:
         data = room_data.model_dump()
-        async with database.transaction() as session:
+        async with database.session.begin():
             updated_room = await database.update_room(
-                session,
-                user_id,
-                room_id,
-                data
+                session=database.session,
+                room_id=room_id,
+                data=data
             )
             return RoomResponseSchema.model_validate(updated_room)
     except IntegrityError as err:

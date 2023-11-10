@@ -36,10 +36,10 @@ class RoomDatabaseService(BaseDataBaseService):
     async def update_room(
         self,
         session: AsyncSession,
-        user_id: uuid.UUID,
+        room_id: uuid.UUID,
         data: dict,
         ):
-        stmt = update(Room).where(Room.id==user_id).values(**data).returning(Room)
+        stmt = update(Room).where(Room.id==room_id).values(**data).returning(Room)
         updated_room = await session.execute(stmt)
         updated_room = updated_room.scalar_one_or_none()
         return updated_room
@@ -120,4 +120,4 @@ class RoomDatabaseService(BaseDataBaseService):
     
     
 def get_room_service():
-    return RoomDatabaseService(settings=RoomDatabaseSettings)
+    return RoomDatabaseService(settings=RoomDatabaseSettings())

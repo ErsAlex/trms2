@@ -18,6 +18,9 @@ pydantic = "^2.4.2"
 passlib = "1.7.4"
 bcrypt = "4.0.1"
 pydantic-settings = "^2.0.3"
+pytest = "^7.4.3"
+multipart = "^0.2.4"
+python-multipart = "^0.0.6"
 
 
 [build-system]

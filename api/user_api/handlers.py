@@ -14,15 +14,15 @@ async def create_user(
     user: UserCreateSchema
     ):
     try:
-        async with database.transaction() as session:
-            new_user = database.create_user(
-                session,
-                user.user_name,
-                user.user_surname,
-                user.email,
-                user.password
+        async with database.session.begin():
+            new_user = await database.create_user(
+                session=database.session,
+                user_name=user.user_name,
+                user_surname=user.user_surname,
+                email=user.email,
+                password=user.password
                 )
-        return UserSchema.moddel_validate(new_user)
+        return UserSchema.model_validate(new_user)
     except IntegrityError as err:
         raise HTTPException(status_code=503, detail=f"Database error: {err}")
 
@@ -31,7 +31,7 @@ async def create_user(
 async def get_user(
     current_user: User = Depends(get_current_user)
     ):
-    return UserSchema.moddel_validate(current_user)
+    return UserSchema.model_validate(current_user)
 
 @router.patch("/me")
 async def update_user(
@@ -41,13 +41,13 @@ async def update_user(
     ):
     try:
         data = updated_data.model_dump()
-        async with database.transaction() as session:
+        async with database.session.begin():
             user = await database.update_user(
-            session=session,
+            session=database.session,
             user_id=current_user.id,
             data=data
             )
-            return UserSchema.moddel_validate(user)
+            return UserSchema.model_validate(user)
     except IntegrityError as err:
         raise HTTPException(status_code=503, detail=f"Database error: {err}")
 
@@ -57,9 +57,9 @@ async def delete_user(
     current_user: User = Depends(get_current_user)
     ):
     try:
-        async with database.transaction() as session:
+        async with database.session.begin():
             response = await database.delete_user(
-            session,
+            database.session,
             id=current_user.id
             )
             return response
