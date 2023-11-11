@@ -23,6 +23,6 @@ async def get_user_id_from_token(token: str = Depends(oauth2_scheme)):
             raise exeption
     except JWTError:
         raise exeption
-    user_id = uuid.UUID(data)
+    user_id = data
     return user_id
  

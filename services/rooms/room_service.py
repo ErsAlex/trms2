@@ -31,7 +31,7 @@ class RoomDatabaseService(BaseDataBaseService):
             room=room
             )
         session.add_all([room, room_accesses])
-        return room
+        return {"response": "room_created"}
     
     async def update_room(
         self,

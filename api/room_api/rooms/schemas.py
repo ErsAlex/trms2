@@ -21,7 +21,8 @@ class RoomResponseSchema(BaseModel):
 
     id: int
     owner_id: uuid.UUID
-    date_created: datetime.datetime
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
     name: str
     description: str
     is_active: bool

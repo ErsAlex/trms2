@@ -9,21 +9,22 @@ from sqlalchemy.exc import IntegrityError
 
 
 room_service = Annotated[RoomDatabaseService, Depends(get_room_service)]
-current_user_id = Annotated[uuid, Depends(get_user_id_from_token)]
+current_user_id = Annotated[str, Depends(get_user_id_from_token)]
 
 
 async def user_room_admin(
     database: room_service,
     # may not work
     room_id: int = Path(),
-    user_id: uuid = Depends(get_user_id_from_token)
+    user_id: str = Depends(get_user_id_from_token)
     ) -> int:
     try:
-        async with database.transaction() as session:
+        async with database.session.begin():
+            id = uuid(user_id)
             permissions= await database.get_user_role_in_room(
-                session,
+                database.session,
                 room_id,
-                user_id
+                id
             )
             if permissions != RoomDatabaseSettings.ROOM_ADMIN:
                 raise HTTPException(status_code=403, detail=f"User {user_id} is not an admin in room {room_id}")
