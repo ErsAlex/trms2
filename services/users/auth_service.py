@@ -15,7 +15,7 @@ class AuthService(BaseDataBaseService):
         session: AsyncSession,
         form_data: OAuth2PasswordRequestForm
     ):
-        stmt = select(User).filter_by(email=form_data.username)
+        stmt = select(User).where(User.email == form_data.username)
         user = await session.execute(stmt)
         user = user.scalar_one_or_none()
         if user:

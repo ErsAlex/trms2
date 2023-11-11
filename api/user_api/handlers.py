@@ -28,7 +28,7 @@ async def create_user(
 
 
 @router.get('/me')
-async def get_user(
+async def get_request_user(
     current_user: User = Depends(get_current_user)
     ):
     return UserSchema.model_validate(current_user)

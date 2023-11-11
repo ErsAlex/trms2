@@ -12,10 +12,11 @@ oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="/login")
 async def get_user_id_from_token(token: str = Depends(oauth2_scheme)):
     exeption = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="invalid credentials")
     try:
+        settings = JWTSettings()
         payload = jwt.decode(
             token,
-            JWTSettings.secret_key,
-            algorithms=[JWTSettings.algorithm]
+            settings.secret_key,
+            algorithms=[settings.algorithm]
             )
         data: str = payload.get('sub')
         if data is None:
@@ -24,4 +25,4 @@ async def get_user_id_from_token(token: str = Depends(oauth2_scheme)):
         raise exeption
     user_id = uuid.UUID(data)
     return user_id
-
+ 

@@ -39,7 +39,7 @@ class UserDatabaseService(BaseDataBaseService):
     async def get_user(
         self,
         session: AsyncSession,
-        filter_by
+        **filter_by
     ):            
         stmt = select(User).filter_by(**filter_by)
         user = await session.execute(stmt)
@@ -49,7 +49,7 @@ class UserDatabaseService(BaseDataBaseService):
     async def delete_user(
         self,
         session: AsyncSession,
-        filter_by
+        **filter_by
     ):
         stmt = delete(User).filter_by(**filter_by)
         await session.execute(stmt)

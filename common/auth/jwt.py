@@ -13,25 +13,11 @@ from fastapi import Response
 
 
 
-class JWTservice:
-    def __init__(
-        self,
-        user: User,
-        settings: JWTSettings
-        ):
-        
-        self._user = user
-        self._settings = settings
-
-    
-    def create_access_token(self):
-        encoded_data = {"sub": self.user.id}
-        expire_date = datetime.utcnow() + self._settings.access_token_expires
-        encoded_data.update({"exp": expire_date})
-        encoded_jwt = jwt.encode(
-            encoded_data,
-            self.settings.secret_key,
-            algorithm=self.settings._algorithm)
-        return encoded_jwt
     
 
+def create_token(data: dict, expiration_delta: timedelta):
+    encoded_data = data.copy()
+    expire_date = datetime.utcnow() + expiration_delta
+    encoded_data.update({"exp": expire_date})
+    encoded_jwt = jwt.encode(encoded_data, "secret_key",  algorithm='HS256')
+    return encoded_jwt
