@@ -115,9 +115,36 @@ class RoomDatabaseService(BaseDataBaseService):
             UserRoomAccess.user_id==user_id
             ))
         role = await session.execute(stmt)
-        return role
+        return role.scalar_one_or_none()
         
-    
-    
+    async def create_access_for_user(
+        self,
+        session: AsyncSession,
+        room_id: int,
+        user_id: uuid.UUID       
+    ):
+        access = UserRoomAccess(
+            user_id=user_id,
+            room_id=room_id
+        )
+        session.add(access)
+        return {"room_id": room_id,
+                "user_id": user_id,
+                "acccess_granted": True}
+        
+    async def delete_access_for_user(
+        self,
+        session: AsyncSession,
+        room_id: int,
+        user_id: uuid.UUID
+    ):
+        stmt = delete(UserRoomAccess).where(and_(
+            UserRoomAccess.room_id==room_id,
+            UserRoomAccess.user_id==user_id
+            ))
+        await session.execute(stmt)
+        return {"user_id": user_id,
+                "access_deleted": True}
+        
 def get_room_service():
     return RoomDatabaseService(settings=RoomDatabaseSettings())

@@ -15,7 +15,7 @@ async def get_current_user(
     database: UserDatabaseService = Depends(get_user_service),
     user_id: uuid.UUID = Depends(get_user_id_from_token)) -> User:
     async with database.session.begin():
-        id = uuid(user_id)
+        id = uuid.UUID(user_id)
         user = await database.get_user(
             database.session,
             id=id
