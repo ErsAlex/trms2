@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from api.room_api.rooms.schemas import RoomCreateSchema, RoomResponseSchema, RoomUpdateSchema, UpdateRoleSchema
-from api.room_api.dependencies import current_user_id, room_service, user_room_admin
+from api.room_api.dependencies import current_user_id, room_service, user_room_admin_prms
 from sqlalchemy.exc import IntegrityError
 from fastapi import Depends
 import uuid
@@ -29,7 +29,7 @@ async def create_room(
 async def update_room(
     room_data: RoomUpdateSchema,
     database: room_service,
-    room: int = Depends(user_room_admin)
+    room: int = Depends(user_room_admin_prms)
 ):
     try:
         data = room_data.model_dump()

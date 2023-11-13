@@ -13,3 +13,9 @@ class AccessResponse(BaseModel):
     user_permissions: RoomRole
     user_id: uuid.UUID
     room_id: int
+    
+class AccessUpdateSchema(BaseModel):
+    user_id: uuid.UUID
+    new_role: str
+    
+    

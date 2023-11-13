@@ -145,6 +145,23 @@ class RoomDatabaseService(BaseDataBaseService):
         await session.execute(stmt)
         return {"user_id": user_id,
                 "access_deleted": True}
-        
+
+
+    async def update_user_role(
+        self,
+        session: AsyncSession,
+        user_id: uuid.UUID,
+        data: dict,
+        room_id: int,
+    ):
+        stmt = update(UserRoomAccess).where(and_(
+            UserRoomAccess.room_id==room_id,
+            UserRoomAccess.user_id==user_id
+            )).values(**data).returning(UserRoomAccess.user_permissions)
+        new_role = await session.execute(stmt)
+        return {"user_id": user_id, 
+                "new_role": new_role}
+            
 def get_room_service():
     return RoomDatabaseService(settings=RoomDatabaseSettings())
+
