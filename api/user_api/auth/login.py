@@ -27,10 +27,19 @@ async def get_access_token(
     if current_user:
         access_token_expired = timedelta(minutes=30)
         refresh_token_expired = timedelta(minutes=35)
-        user_id = str(current_user.id)
-        access_token = create_token(data={"sub": user_id},
-                                expiration_delta=access_token_expired)
-        refresh_token = create_token(data={"sub": user_id}, expiration_delta=refresh_token_expired)
+        data = {"sub": str(current_user.id),
+                "mail": current_user.email,
+                "name": current_user.user_surname     
+        }
+
+        access_token = create_token(
+            data=data,
+            expiration_delta=access_token_expired
+            )
+        refresh_token = create_token(
+            data=data,
+            expiration_delta=refresh_token_expired
+            )
         response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
         return {"status": "token issued", "access_token": access_token, "refresh_token": refresh_token}
 

@@ -9,6 +9,8 @@ from .utils import OAuth2PasswordBearerWithCookie
 
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="/login")
 
+
+# subject to be refactored to funtciton that returns a dict data
 async def get_user_id_from_token(token: str = Depends(oauth2_scheme)):
     exeption = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="invalid credentials")
     try:
@@ -26,3 +28,17 @@ async def get_user_id_from_token(token: str = Depends(oauth2_scheme)):
     user_id = data
     return user_id
  
+async def get_user_data_from_token(token: str = Depends(oauth2_scheme)):
+    exeption = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="invalid credentials")
+    try:
+        settings = JWTSettings()
+        payload = jwt.decode(
+            token,
+            settings.secret_key,
+            algorithms=[settings.algorithm]
+            )
+        if payload is None:
+            raise exeption
+    except JWTError:
+        raise exeption
+    return payload
